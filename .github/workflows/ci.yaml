@@ -43,3 +43,5 @@ jobs:
       - name: Coverage
         run: poetry run coverage run -m pytest && poetry run coverage xml
       - uses: codecov/codecov-action@v2
+        with:
+          files: ./coverage.xml
