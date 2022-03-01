@@ -15,8 +15,7 @@ jobs:
         uses: julianwachholz/flake8-action@v2
         with:
           checkName: "Python Lint"
-          path: path/to/files
-          plugins: flake8-spellcheck
+          plugins: flake8-tidy-imports flake8-pytest-style flake8-broken-line flake8-bugbear flake8-comprehensions
           config: .flake8
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
