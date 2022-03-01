@@ -17,8 +17,7 @@ def test_usage() -> None:
 
     expected = {
         "trx_id": "235c1cf9df062dc49bd0a89b45332c93c81d4fceced7ea0a8883c4da999bf6c9",
-        "url": "https://tronscan.org/#/transaction"
-               "/235c1cf9df062dc49bd0a89b45332c93c81d4fceced7ea0a8883c4da999bf6c9",
+        "url": "https://tronscan.org/#/transaction/235c1cf9df062dc49bd0a89b45332c93c81d4fceced7ea0a8883c4da999bf6c9",
         "type": "Dividend",
         "status": "SUCCESS",
         "timestamp": "2020-09-27T02:58:51Z",
