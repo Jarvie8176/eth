@@ -3,20 +3,20 @@ name: Lint
 on: [push, pull_request]
 
 jobs:
-  flake8-lint:
+  lint:
+    name: Python Lint
     runs-on: ubuntu-latest
-    name: Lint
     steps:
-      - name: Check out source repository
-        uses: actions/checkout@v2
-      - name: Set up Python environment
-        uses: actions/setup-python@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: "3.8"
-      - name: flake8 Lint
-        uses: py-actions/flake8@v2
+      - name: Run flake8
+        uses: julianwachholz/flake8-action@v2
         with:
-          select: C,E,F,W,B,B950
-          ignore: E203,E501,W503
-          max-line-length: "88"
-          max-complexity: "10"
+          checkName: "Python Lint"
+          path: path/to/files
+          plugins: flake8-spellcheck
+          config: .flake8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
