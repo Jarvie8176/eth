@@ -1,6 +1,8 @@
 # eth
 eth transaction parser
 
+[![codecov](https://codecov.io/gh/Jarvie8176/eth/branch/main/graph/badge.svg?token=HQP6GE9CXK)](https://codecov.io/gh/Jarvie8176/eth)
+
 
 ## install
 
@@ -11,7 +13,7 @@ poetry run pre-commit install
 poertry install
 ```
 
-## tset
+## test
 
 ### unit
 ```shell
