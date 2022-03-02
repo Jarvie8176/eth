@@ -47,7 +47,7 @@ jobs:
         run: bash run-load-resources.sh
 
       - name: Coverage
-        run: bash run-test.sh
+        run: bash run-test-ci.sh
       - uses: codecov/codecov-action@v2
         with:
           files: ./coverage.xml
