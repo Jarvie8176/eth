@@ -22,7 +22,9 @@ class TRXPriceLookup(BasePriceLookup):
 
     def load(self) -> None:
         """
-        loads price data from csv, parse into a sorted list of price records in ascending order (first is earliest)
+        loads price data from csv,
+        then parse into a sorted list of price records
+        in ascending order (first is earliest)
         """
         with open(self.source_file_path, "r") as f:
             reader = csv.DictReader(f)

@@ -40,6 +40,12 @@ jobs:
         run: poetry install
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
+      - name: Lint
+        run: bash run-lint.sh
+
+      - name: Load test resources
+        run: bash run-load-resources.sh
+
       - name: Coverage
         run: bash run-test.sh
       - uses: codecov/codecov-action@v2

@@ -1,25 +1,36 @@
-# See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
     rev: v3.2.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
 
--   repo: https://github.com/pre-commit/mirrors-autopep8
+  - repo: 'https://github.com/pre-commit/mirrors-autopep8'
     rev: v1.4.4
     hooks:
       - id: autopep8
 
--   repo: https://github.com/myint/autoflake
+  - repo: 'https://github.com/myint/autoflake'
     rev: v1.4
     hooks:
       - id: autoflake
         args:
-          - --in-place
-          - --remove-unused-variables
-          - --remove-all-unused-imports
-          - --expand-star-imports
+          - '--in-place'
+          - '--remove-unused-variables'
+          - '--remove-all-unused-imports'
+          - '--expand-star-imports'
+
+  - repo: local
+    hooks:
+      - id: lint-flake8
+        name: "Lint: flake8"
+        entry: bash run-lint.sh && exit 1
+        language: system
+        require_serial: true
+      - id: test
+        name: "Test"
+        entry: bash run-test.sh exit 1
+        language: system
+        require_serial: true
