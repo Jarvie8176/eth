@@ -1,6 +1,6 @@
 from typing import Optional
 
-from parser.tronGrid.currency import Currency
+from parser.TronGrid.currency import Currency
 
 
 trx_token = Currency(

@@ -41,7 +41,7 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
 
       - name: Coverage
-        run: poetry run coverage run -m pytest && poetry run coverage xml
+        run: bash run-test.sh
       - uses: codecov/codecov-action@v2
         with:
           files: ./coverage.xml

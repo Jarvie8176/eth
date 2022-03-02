@@ -67,11 +67,11 @@ class TrxDto(BaseModel):
     def status(self) -> str:
         return ", ".join([ret.contractRet for ret in self.details.ret])
 
-    """
-    returns the first contract in transaction, None if there is no contract
-    """
-
     def get_contract(self) -> Optional[TrxRawDataContractDto]:
+        """
+        returns the first contract in transaction, None if there is no contract
+        :return: {TrxRawDataContractDto}
+        """
         contracts = self.details.raw_data.contract
         if len(contracts) == 0:
             logger.warning(f"no contract in trx: {self.trx_id}")

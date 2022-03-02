@@ -1,4 +1,4 @@
-from parser.tronGrid.currency import Currency
+from parser.TronGrid.currency import Currency
 
 
 def test_to_readable_value() -> None:
