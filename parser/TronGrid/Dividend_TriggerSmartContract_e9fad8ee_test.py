@@ -4,14 +4,14 @@ from parser.TronGrid.util import prepare_parse_result
 
 def test_usage() -> None:
     expected = {
-        "trx_id": "235c1cf9df062dc49bd0a89b45332c93c81d4fceced7ea0a8883c4da999bf6c9",
-        "url": "https://tronscan.org/#/transaction/235c1cf9df062dc49bd0a89b45332c93c81d4fceced7ea0a8883c4da999bf6c9",
+        "trx_id": "c5906208fa72274161a09b2a7a5444e6b50a8681359750f001d659616bccd0dd",
+        "url": "https://tronscan.org/#/transaction/c5906208fa72274161a09b2a7a5444e6b50a8681359750f001d659616bccd0dd",
         "type": "Dividend",
         "status": "SUCCESS",
-        "timestamp": "2020-09-27T02:58:51+00:00",
-        "in_amount": "2363.782943",
-        "in_currency": "GOLD",
-        "fee_amount": "0.66087",
+        "timestamp": "2020-09-11T22:02:09+00:00",
+        "in_amount": "0.00201081314571313",
+        "in_currency": "Tig",
+        "fee_amount": "1.24132",
         "fee_currency": "TRON",
         "in_rate": None,
         "in_rate_unit": None,

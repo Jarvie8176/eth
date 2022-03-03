@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Currency(BaseModel):
+    name: str
     unit: str
     decimal_places: int
     contract_address: str
@@ -17,4 +18,7 @@ class Currency(BaseModel):
         result = value.zfill(self.decimal_places + 1)
         insert_at = len(result) - self.decimal_places
         result = result[:insert_at] + "." + result[insert_at:]
-        return result.rstrip("0")
+        result = result.rstrip("0")
+        if result[-1] == ".":
+            result = result + "0"
+        return result
