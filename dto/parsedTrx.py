@@ -31,6 +31,8 @@ class ParsedTrxDto(BaseModel):
 
 class ParsedTrxType(str, Enum):
     Dividend = "Dividend"
+    Swap = "Swap"
+    Transfer = "Transfer"
 
 
 class ParsedTrxStatus(str, Enum):
