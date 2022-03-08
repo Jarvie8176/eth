@@ -1,6 +1,5 @@
-from typing import Optional
-
-from parser.TronGrid.currency import Currency
+from parser.currency import Currency
+from parser.currencyLookup import CurrencyLookup
 
 currency_list = [
     Currency(name="TRXToken",
@@ -38,13 +37,4 @@ currency_list = [
              contract_address="TGbu32VEGpS4kDmjrmn5ZZJgUyHQiaweoq"),
 ]
 
-
-def name_to_currency(name: str) -> Currency:
-    return next(i for i in currency_list if i.name == name)
-
-
-def contract_address_to_currency(addr: str) -> Optional[Currency]:
-    try:
-        return next(i for i in currency_list if i.contract_address == addr)
-    except StopIteration:
-        return None
+TronGrid_currency_lookup = CurrencyLookup.from_currency_list(currency_list)

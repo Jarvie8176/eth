@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 import pytz
 from loguru import logger
@@ -6,11 +7,11 @@ from loguru import logger
 from dto.TronGrid.transaction import TrxDto
 from dto.TronGrid.contractType import ContractType
 from dto.parsedTrx import ParsedTrx, ParsedTrxType, TrxPayload
-from parser.base import BaseParser
-from parser.TronGrid.currencyLookup import contract_address_to_currency, name_to_currency
+from parser.TronGrid.defn_currency import TronGrid_currency_lookup
+from parser.TronGrid.parser_base import TronGridParser
 
 
-class Parser(BaseParser):
+class Parser(TronGridParser):
     """
     parser for a specific transaction
     example: https://tronscan.org/#/transaction/035ac031e657c9370f2a7470f8673d23ee576176b57c3a92b6c870adaff2c0f1
@@ -39,11 +40,11 @@ class Parser(BaseParser):
             logger.warning(f"failed to parse contract: {e}")
             return False
 
-    def parse(self, trx: TrxDto) -> ParsedTrx:
+    def parse(self, trx: TrxDto) -> List[ParsedTrx]:
         event = trx.events.get_event_by_index(2)
         reward_contract_addr = event.contract_address
 
-        reward_currency = contract_address_to_currency(reward_contract_addr)
+        reward_currency = TronGrid_currency_lookup.contract_address_to_currency(reward_contract_addr)
         if not reward_currency:
             raise ValueError(f"cannot find reward currency: {reward_contract_addr}")
 
@@ -51,18 +52,19 @@ class Parser(BaseParser):
         if reward_amount is None:
             raise ValueError("cannot find reward amount")
 
-        fee_currency = name_to_currency("TRXToken")
+        fee_currency = self.major_currency
         fee_amount = str(trx.info.fee)
 
-        return ParsedTrx(
+        return [ParsedTrx(
             trx_id=trx.trx_id,
             url=f"https://tronscan.org/#/transaction/{trx.trx_id}",
             type=ParsedTrxType.Dividend,
             status=trx.status,
             timestamp=datetime.fromtimestamp(trx.info.blockTimeStamp / 1000,
                                              tz=pytz.UTC),
+            major_currency=self.major_currency,
             in_payload=TrxPayload(value=reward_amount,
                                   currency=reward_currency
                                   ),
             fee_payload=TrxPayload(value=fee_amount,
-                                   currency=fee_currency))
+                                   currency=fee_currency))]

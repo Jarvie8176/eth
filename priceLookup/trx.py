@@ -1,7 +1,6 @@
-import bisect
 import csv
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Any, Dict
 
 import pytz
 
@@ -15,9 +14,8 @@ class TRXPriceLookup(BasePriceLookup):
         return "TRON"
 
     def __init__(self, source_file_path: str):
-        super()
-        self.price_data: List[PriceDto] = []
         self.source_file_path = source_file_path
+        super().__init__()
         self.load()
 
     def load(self) -> None:
@@ -39,17 +37,3 @@ class TRXPriceLookup(BasePriceLookup):
         symbol = row["symbol"]
         close = row["close"]
         return PriceDto(timestamp=timestamp, symbol=symbol, close=close)
-
-    def time_to_price(self, timestamp: datetime) -> PriceDto:
-        candidate = PriceDto(timestamp=timestamp, symbol="", close="")
-        left_idx = bisect.bisect_left(self.price_data, candidate)
-        left_idx = left_idx - 1  # shift to the actual left, not insert place
-        right_idx = max(min(len(self.price_data) - 1, left_idx + 1), 0)
-
-        left = self.price_data[left_idx]
-        right = self.price_data[right_idx]
-
-        closest = left if abs(timestamp - left.timestamp) < abs(
-            timestamp - right.timestamp) else right
-
-        return closest

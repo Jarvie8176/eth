@@ -1,9 +1,11 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+
+from pydantic import Field
 from pydantic.main import BaseModel
 from dto.price import PriceDto
-from parser.TronGrid.currency import Currency
+from parser.currency import Currency
 
 
 class ParsedTrxDto(BaseModel):
@@ -13,11 +15,13 @@ class ParsedTrxDto(BaseModel):
     status: str
     timestamp: str
     in_amount: Optional[str]
+    in_amount_major: Optional[str]
     in_currency: Optional[str]
     in_rate: Optional[str]
     in_rate_unit: Optional[str]
     in_rate_timestamp: Optional[str]
     out_amount: Optional[str]
+    out_amount_major: Optional[str]
     out_currency: Optional[str]
     out_rate: Optional[str]
     out_rate_unit: Optional[str]
@@ -33,6 +37,9 @@ class ParsedTrxType(str, Enum):
     Dividend = "Dividend"
     Swap = "Swap"
     Transfer = "Transfer"
+    Sell = "Sell"
+    Buy = "Buy"
+    Withdraw = "Withdraw"
 
 
 class ParsedTrxStatus(str, Enum):
@@ -41,6 +48,8 @@ class ParsedTrxStatus(str, Enum):
 
 class TrxPayload(BaseModel):
     value: str
+    value_major: Optional[str] = Field(description="equivalent value in major currency (e.g. TRX or ETH); "
+                                                   "None if there is not parsable (e.g. rewards)")
     currency: Currency
     price: Optional[PriceDto]
 
@@ -59,9 +68,14 @@ class ParsedTrx(BaseModel):
     type: ParsedTrxType
     status: ParsedTrxStatus
     timestamp: datetime
+    major_currency: Currency
     in_payload: Optional[TrxPayload]
     out_payload: Optional[TrxPayload]
     fee_payload: Optional[TrxPayload]
+
+    def _payload_to_readable_major_amount(self, payload: TrxPayload) -> Optional[str]:
+        value = payload.value_major
+        return None if value is None else self.major_currency.to_readable_value(value)
 
     def to_dto(self) -> ParsedTrxDto:
         result = ParsedTrxDto(trx_id=self.trx_id,
@@ -73,6 +87,7 @@ class ParsedTrx(BaseModel):
         in_payload = self.in_payload
         if in_payload:
             result.in_amount = in_payload.readable_amount
+            result.in_amount_major = self._payload_to_readable_major_amount(in_payload)
             result.in_currency = in_payload.currency.unit
 
             in_price_dto = in_payload.price
@@ -84,6 +99,7 @@ class ParsedTrx(BaseModel):
         out_payload = self.out_payload
         if out_payload:
             result.out_amount = out_payload.readable_amount
+            result.out_amount_major = self._payload_to_readable_major_amount(out_payload)
             result.out_currency = out_payload.currency.unit
 
             out_price_dto = out_payload.price
