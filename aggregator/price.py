@@ -2,10 +2,17 @@ from __future__ import annotations
 from typing import List, Optional
 
 from loguru import logger
+from pydantic.main import BaseModel
 
 from dto.parsedTrx import ParsedTrx
 from priceLookup.base import BasePriceLookup
+from priceLookup.eth import ETHPriceLookup
 from priceLookup.trx import TRXPriceLookup
+
+
+class PriceAggregatorCreateOptions(BaseModel):
+    trx_price_data_file_path: Optional[str]
+    eth_price_data_file_path: Optional[str]
 
 
 class PriceAggregator:
@@ -47,6 +54,13 @@ class PriceAggregator:
             return None
 
     @staticmethod
-    def create(trx_price_data_file_path: str) -> PriceAggregator:
-        return PriceAggregator().add_price_lookup(
-            TRXPriceLookup(trx_price_data_file_path))
+    def create(options: PriceAggregatorCreateOptions) -> PriceAggregator:
+        price_aggregator = PriceAggregator()
+
+        if options.trx_price_data_file_path:
+            price_aggregator.add_price_lookup(TRXPriceLookup(options.trx_price_data_file_path))
+
+        if options.eth_price_data_file_path:
+            price_aggregator.add_price_lookup(ETHPriceLookup(options.eth_price_data_file_path))
+
+        return price_aggregator

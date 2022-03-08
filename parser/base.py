@@ -1,15 +1,22 @@
 from abc import ABC, abstractmethod
+from typing import Union, TypeVar, Generic, List
+from pydantic.generics import GenericModel
 
-from dto.TronGrid.transaction import TrxDto
+from dto.Infura.transaction import TrxDto as InfuraTrxDto
+from dto.TronGrid.transaction import TrxDto as TronTrxDto
 from dto.parsedTrx import ParsedTrx
 
+AnyTrxDto = Union[InfuraTrxDto, TronTrxDto]
 
-class BaseParser(ABC):
-    def can_handle(self, trx: TrxDto) -> bool:
+TrxDtoType = TypeVar("TrxDtoType")
+
+
+class BaseParser(ABC, GenericModel, Generic[TrxDtoType]):
+    def can_handle(self, trx: TrxDtoType) -> bool:
         return False
 
     @abstractmethod
-    def parse(self, trx: TrxDto) -> ParsedTrx:
+    def parse(self, trx: TrxDtoType) -> List[ParsedTrx]:
         raise NotImplementedError("not implemented")
 
     @property

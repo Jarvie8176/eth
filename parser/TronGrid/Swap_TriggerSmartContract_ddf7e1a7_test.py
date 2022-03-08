@@ -10,11 +10,13 @@ def test_usage() -> None:
         "status": "SUCCESS",
         "timestamp": "2020-09-29T21:06:45+00:00",
         "in_amount": "20.587889",
+        "in_amount_major": "799.800211",
         "in_currency": "USDT",
         "in_rate": None,
         "in_rate_unit": None,
         "in_rate_timestamp": None,
         "out_amount": "0.059127",
+        "out_amount_major": "799.800211",
         "out_currency": "COLA",
         "out_rate": None,
         "out_rate_unit": None,
@@ -26,4 +28,6 @@ def test_usage() -> None:
         "fee_rate_timestamp": None,
     }
 
-    TestCase().assertDictEqual(expected, prepare_parse_result(__file__).dict())
+    result = prepare_parse_result(__file__)
+    assert len(result) == 1
+    TestCase().assertDictEqual(expected, result[0].to_dto().dict())

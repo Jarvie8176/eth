@@ -3,11 +3,13 @@ import pathlib
 from os import path
 from typing import List
 
-from aggregator.price import PriceAggregator
+from loguru import logger
+
+from aggregator.price import PriceAggregator, PriceAggregatorCreateOptions
 from dto.TronGrid.transaction import TrxDto
 from dto.parsedTrx import ParsedTrx
 from models.exceptions import ParserNotFound
-from parser.TronGrid.parserLookup import ParserLookup
+from parser.TronGrid.defn_parser import TronGrid_parser_lookup
 
 
 def test() -> None:
@@ -20,23 +22,24 @@ def test() -> None:
 
     assert len(transactions) == 172
 
-    parser_lookup = ParserLookup.create()
+    parser_lookup = TronGrid_parser_lookup
 
     parsed_trx: List[ParsedTrx] = []
     failed_trx: List[TrxDto] = []
 
     for trx in transactions:
-        print(trx.trx_id)
         try:
-            parsed_trx.append(parser_lookup.find_parser(trx).parse(trx))
+            parsed_trx = parsed_trx + parser_lookup.find_parser(trx).parse(trx)
         except ParserNotFound:
             failed_trx.append(trx)
-        except Exception:
+        except Exception as e:
+            logger.error("unexpected error", e)
             failed_trx.append(trx)
 
     trx_price_data_file_path = path.join(pathlib.Path(__file__).parent.resolve(),
                                          "../resources/historicalPrice/Bitfinex_TRXUSD_1h.csv")
-    price_aggregator = PriceAggregator.create(trx_price_data_file_path=trx_price_data_file_path)
+    price_aggregator = PriceAggregator.create(
+        options=PriceAggregatorCreateOptions(trx_price_data_file_path=trx_price_data_file_path))
     for i in parsed_trx:
         price_aggregator.update_price(i)
 
