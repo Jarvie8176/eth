@@ -80,7 +80,8 @@ class ETHRunner:
         transactions = self.load_trx(trx_ids)
 
         parsed_trxs, failed_trxs = self.parse_trx(transactions)
-        self.aggregate_trx(self.parsed_trxs)
+        self.aggregate_trx(parsed_trxs)
+        logger.info("price data aggregated")
 
         self.parsed_trxs = parsed_trxs
         self.failed_trxs = failed_trxs
