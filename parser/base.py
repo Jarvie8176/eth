@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Union, TypeVar, Generic, List, Any
-from pydantic.generics import GenericModel
+from typing import Generic, List, TypeVar, Union
 
 from dto.Infura.transaction import TrxDto as InfuraTrxDto
 from dto.TronGrid.transaction import TrxDto as TronTrxDto
@@ -15,7 +14,6 @@ class BaseParser(ABC, Generic[TrxDtoType]):
     def __init__(self) -> None:
         super().__init__()
         self.major_currency_symbol: str = ""
-
 
     @property
     def load_order(self) -> int:

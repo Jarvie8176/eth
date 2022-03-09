@@ -1,5 +1,3 @@
-import json
-from typing import List
 from unittest import TestCase
 
 from parser.Infura.defn_parser import Infura_parser_lookup

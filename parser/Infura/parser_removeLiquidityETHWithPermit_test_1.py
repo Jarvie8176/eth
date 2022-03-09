@@ -1,4 +1,3 @@
-from typing import List
 from unittest import TestCase
 
 from parser.Infura.util import prepare_parse_result
@@ -53,7 +52,7 @@ def test() -> None:
         "fee_rate_timestamp": None,
     }]
 
-    result: List[ParsedTrx] = prepare_parse_result(__file__)  # type: ignore
+    result = prepare_parse_result(__file__)
     assert len(result) == 2
 
     TestCase().assertDictEqual(expected[0], result[0].to_dto().dict())

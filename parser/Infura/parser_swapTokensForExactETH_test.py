@@ -1,9 +1,7 @@
-import json
 from unittest import TestCase
 
 from parser.Infura.defn_parser import Infura_parser_lookup
 from parser.Infura.util import prepare_parse_result
-from parser.parserLookup import ParserLookup
 
 
 def test() -> None:
