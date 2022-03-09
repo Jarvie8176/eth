@@ -38,7 +38,7 @@ class Parser(TronGridParser):
                              ("reward" in events[1].event_name.lower() or "withdrawn" in events[
                                  1].event_name.lower() or "airdrop" in events[1].event_name.lower())
 
-            return is_smart_contract and has_valid_sigs
+            return is_smart_contract and has_valid_sigs and self.assert_log_length(trx, 2)
 
         except Exception as e:
             logger.warning(f"failed to parse contract: {e}")

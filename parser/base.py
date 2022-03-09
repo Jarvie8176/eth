@@ -27,3 +27,7 @@ class BaseParser(ABC, GenericModel, Generic[TrxDtoType]):
         :return:
         """
         return 0
+
+    @abstractmethod
+    def assert_log_length(self, trx: TrxDtoType, length: int) -> bool:
+        pass

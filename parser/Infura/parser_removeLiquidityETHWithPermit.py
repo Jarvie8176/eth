@@ -13,7 +13,7 @@ class Parser(InfuraParser):
     """
 
     def can_handle(self, trx: TrxDto) -> bool:
-        return trx.details.method_id == "0xded9382a"
+        return trx.details.method_id == "0xded9382a" and self.assert_log_length(trx, 9)
 
     def parse(self, trx: TrxDto) -> List[ParsedTrx]:
         in_trx_log_1 = trx.receipt.get_log_by_index(7)

@@ -8,3 +8,7 @@ class CurrencyNotFound(Exception):
 
 class TransactionSkipped(Exception):
     pass
+
+
+class TrxLogLengthNotMatch(Exception):
+    pass

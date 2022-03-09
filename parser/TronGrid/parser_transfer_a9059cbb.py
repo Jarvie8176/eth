@@ -31,7 +31,7 @@ class Parser(TronGridParser):
             is_smart_contract = contract_type == ContractType.TriggerSmartContract
             has_valid_sigs = "transfer" in trx.events.get_event_by_index(0).event_name.lower().lower()
 
-            return is_smart_contract and has_valid_sigs
+            return is_smart_contract and has_valid_sigs and self.assert_log_length(trx, 1)
 
         except Exception as e:
             logger.warning(f"failed to parse contract: {e}")

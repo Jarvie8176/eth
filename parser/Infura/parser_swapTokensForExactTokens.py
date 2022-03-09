@@ -9,11 +9,11 @@ from parser.Infura.defn_status import parse_status
 
 class Parser(InfuraParser):
     """
-    default parser of "swapTokensForExactTokens", method_id: "0x8803dbee"
+    default parser of "swapExactTokensForTokens", method_id: "0x8803dbee"
     """
 
     def can_handle(self, trx: TrxDto) -> bool:
-        return trx.details.method_id == "0x8803dbee"
+        return trx.details.method_id == "0x8803dbee" and self.assert_log_length(trx, 7)
 
     def parse(self, trx: TrxDto) -> List[ParsedTrx]:
         in_trx_log = trx.receipt.get_log_by_index(4)

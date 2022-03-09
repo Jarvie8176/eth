@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Optional
 
-from dto.Infura.transaction import TrxDto
+from dto.Infura.transaction import TrxDto, TrxLogDto
 from dto.parsedTrx import ParsedTrx, TrxPayload, ParsedTrxType
 from parser.Infura.parser_base import InfuraParser
 from parser.Infura.defn_currency import Infura_currency_lookup
@@ -16,8 +16,8 @@ class Parser(InfuraParser):
         return trx.details.method_id == "0x18cbafe5"
 
     def parse(self, trx: TrxDto) -> List[ParsedTrx]:
-        in_trx_log = trx.receipt.get_log_by_index(2)
-        out_trx_log = trx.receipt.get_log_by_index(0)
+        in_trx_log = self.find_in_trx_log(trx)
+        out_trx_log = self.find_out_trx_log(trx)
 
         if not in_trx_log:
             raise ValueError("cannot find transaction log of in event")
@@ -43,3 +43,9 @@ class Parser(InfuraParser):
                           in_payload=in_payload,
                           out_payload=out_payload,
                           fee_payload=fee_payload)]
+
+    def find_in_trx_log(self, trx: TrxDto) -> Optional[TrxLogDto]:
+        return self.find_first_transafer_from_major_currency(trx)
+
+    def find_out_trx_log(self, trx: TrxDto) -> Optional[TrxLogDto]:
+        return self.find_first_transfer_out_log(trx)

@@ -44,6 +44,7 @@ class ParsedTrxType(str, Enum):
 
 class ParsedTrxStatus(str, Enum):
     Success = "SUCCESS"
+    Fail = "FAIL"
 
 
 class TrxPayload(BaseModel):

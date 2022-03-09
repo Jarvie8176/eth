@@ -33,7 +33,7 @@ class Parser(TronGridParser):
                              "tokenpurchase" in trx.events.get_event_by_index(1).event_name.lower() and \
                              "snapshot" in trx.events.get_event_by_index(2).event_name.lower()  # noqa: W504
 
-            return is_smart_contract and has_valid_sigs
+            return is_smart_contract and has_valid_sigs and self.assert_log_length(trx, 3)
 
         except Exception as e:
             logger.warning(f"failed to parse contract: {e}")

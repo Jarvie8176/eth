@@ -5,7 +5,7 @@ from parser.currencyLookup import CurrencyLookup
 
 currency_list: List[Currency] = [
     Currency(name="Ether", unit="ETH", decimal_places=18,
-             contract_address=""),
+             contract_address="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
     Currency(name="Wrapped Ether", unit="ETH", decimal_places=18,
              contract_address="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
     Currency(name="Serum", unit="SRM", decimal_places=6,

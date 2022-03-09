@@ -36,7 +36,7 @@ class Parser(TronGridParser):
                              "trxpurchase" in trx.events.get_event_by_index(4).event_name.lower() and \
                              "snapshot" in trx.events.get_event_by_index(5).event_name.lower()
 
-            return is_smart_contract and has_valid_sigs
+            return is_smart_contract and has_valid_sigs and self.assert_log_length(trx, 6)
 
         except Exception as e:
             logger.warning(f"failed to parse contract: {e}")

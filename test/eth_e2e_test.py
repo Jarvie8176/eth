@@ -17,5 +17,5 @@ def test() -> None:
 
     result = runner.to_dict()
 
-    assert len(result.get("parsed_trxs")) == 37  # type: ignore
-    assert len(result.get("failed_trxs")) == 141  # type: ignore
+    assert len(result.get("parsed_trxs")) == 43  # type: ignore
+    assert len(result.get("failed_trxs")) == 135  # type: ignore
