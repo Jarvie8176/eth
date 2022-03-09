@@ -12,7 +12,7 @@ class Parser(InfuraParser):
     """
 
     def can_handle(self, trx: TrxDto) -> bool:
-        return trx.details.method_id == "0x2e1a7d4d" and self.assert_log_length(trx, 1)
+        return trx.details.method_id == "0x2e1a7d4d"
 
     def parse(self, trx: TrxDto) -> List[ParsedTrx]:
         raise TransactionSkipped(f"skipped transaction: {trx.trx_id}")

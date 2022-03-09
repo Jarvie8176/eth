@@ -4,6 +4,7 @@ from parser.currency import Currency
 from parser.currencyLookup import CurrencyLookup
 
 currency_list: List[Currency] = [
+    # ETH network
     Currency(name="Ether", unit="ETH", decimal_places=18,
              contract_address="0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
     Currency(name="Wrapped Ether", unit="ETH", decimal_places=18,
@@ -36,6 +37,60 @@ currency_list: List[Currency] = [
              contract_address="0xa1d0e215a23d7030842fc67ce582a6afa3ccab83"),
     Currency(name="UNIFI", unit="UNIFI", decimal_places=18,
              contract_address="0x0ef3b2024ae079e6dbc2b37435ce30d2731f0101"),
+
+    # BSC network
+    Currency(name="BNB", unit="BNB", decimal_places=18,
+             contract_address="0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"),
+    Currency(name="Wrapped BNB", unit="BNB", decimal_places=18,
+             contract_address="0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"),
+    Currency(name="Binance-Peg USD Coin", unit="USDC", decimal_places=18,
+             contract_address="0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d"),
+    Currency(name="PancakeSwap Token", unit="Cake", decimal_places=18,
+             contract_address="0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82"),
+    Currency(name="AUTOv2", unit="AUTO", decimal_places=18,
+             contract_address="0xa184088a740c695e156f91f5cc086a06bb78b827"),
+    Currency(name="Pancake LPs", unit="Cake-LP", decimal_places=18,
+             contract_address="0xd5664d2d15cdffd597515f1c0d945c6c1d3bf85b"),
+    Currency(name="Ellipsis.finance BUSD/USDC/USDT ", unit="3EPS", decimal_places=18,
+             contract_address="0xaf4de8e872131ae328ce21d909c74705d3aaf452"),
+    Currency(name="Binance-Peg BUSD Token", unit="BUSD", decimal_places=18,
+             contract_address="0xe9e7cea3dedca5984780bafc599bd69add087d56"),
+    Currency(name="MDX Token", unit="MDX", decimal_places=18,
+             contract_address="0x9c65ab58d8d978db963e63f2bfb7121627e3a739"),
+    Currency(name="Pancake LPs", unit="Cake-LP", decimal_places=18,
+             contract_address="0x680dd100e4b394bda26a59dd5c119a391e747d18"),
+    Currency(name="Nerve", unit="NRV", decimal_places=18,
+             contract_address="0x42f6f551ae042cbe50c739158b4f0cac0edb9096"),
+    Currency(name="Wrapped UST Token ", unit="UST", decimal_places=18,
+             contract_address="0x23396cf899ca06c4472205fc903bdb4de249d6fc"),
+    Currency(name="Wrapped Mirror GOOGL Token ", unit="mGOOGL", decimal_places=18,
+             contract_address="0x62d71b23bf15218c7d2d7e48dbbd9e9c650b173f"),
+    Currency(name="Wrapped UST Token ", unit="UST", decimal_places=18,
+             contract_address="0x23396cf899ca06c4472205fc903bdb4de249d6fc"),
+    Currency(name="Binance-Peg BSC-USD", unit="BSC-USD", decimal_places=18,
+             contract_address="0x55d398326f99059ff775485246999027b3197955"),
+    Currency(name="Wrapped Mirror NFLX Token", unit="mNFLX", decimal_places=18,
+             contract_address="0xa04f060077d90fe2647b61e4da4ad1f97d6649dc"),
+    Currency(name="Ellipsis", unit="EPS", decimal_places=18,
+             contract_address="0xa7f552078dcc247c2684336020c03648500c6d9f"),
+    Currency(name="FinNexus", unit="FNX", decimal_places=18,
+             contract_address="0xdfd9e2a17596cad6295ecffda42d9b6f63f7b5d5"),
+    Currency(name="MoMo KEY", unit="KEY", decimal_places=18,
+             contract_address="0x85c128ee1feeb39a59490c720a9c563554b51d33"),
+    Currency(name="ShardingDAO", unit="SHD", decimal_places=18,
+             contract_address="0x5845cd0205b5d43af695412a79cf7c1aeddb060f"),
+    Currency(name="Mist", unit="MIST", decimal_places=18,
+             contract_address="0x68e374f856bf25468d365e539b700b648bf94b67"),
+    Currency(name="Cyclone Protocol", unit="CYC", decimal_places=18,
+             contract_address="0x810ee35443639348adbbc467b33310d2ab43c168"),
+    Currency(name="Bunny Token", unit="BUNNY", decimal_places=18,
+             contract_address="0xc9849e6fdb743d08faee3e34dd2d1bc69ea11a51"),
+    Currency(name="loser coin", unit="lowb", decimal_places=18,
+             contract_address="0x843d4a358471547f51534e3e51fae91cb4dc3f28"),
+    Currency(name="Wrapped Mirror TSLA Token", unit="mTSLA", decimal_places=18,
+             contract_address="0xf215a127a196e3988c09d052e16bcfd365cd7aa3"),
+
 ]
+
 
 Infura_currency_lookup = CurrencyLookup.from_currency_list(currency_list)

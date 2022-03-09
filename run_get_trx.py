@@ -1,6 +1,12 @@
+from os import environ
+
 import sys
+from dotenv import load_dotenv
+
 from explorerClient.eth import ETHExplorerClient
 
 if __name__ == "__main__":
-    client = ETHExplorerClient.create(rpc_endpoint="https://mainnet.infura.io/v3/5b074910bb1d4b8f883ca53b0a8f0423")
+    load_dotenv()
+    # client = ETHExplorerClient.create(rpc_endpoint=environ.get("APP_API_CLIENT_INFURA_RPC_ENDPOINT"))
+    client = ETHExplorerClient.create(rpc_endpoint=environ.get("APP_API_CLIENT_BIFINANCE_RPC_ENDPOINT"))
     print(client.get_transaction(sys.argv[1]).json())

@@ -1,18 +1,6 @@
-from os import environ
-
-from dotenv import load_dotenv
-
-from runner.eth import ETHRunner, ETHRunnerCreateOptions
+from web3 import Web3
 
 if __name__ == "__main__":
-    load_dotenv()
+    w3 = Web3(Web3.HTTPProvider("https://bsc-dataseed1.binance.org:443"))
 
-    cwd = "."
-
-    runner = ETHRunner.create(ETHRunnerCreateOptions(
-        input_file_path="./data/test_fixture/eth_0x228F5fFe4BFFE42278d50563B728aF83C36bd1A0.csv",
-        trx_list_file_path="./data/cache/eth_trx_list.txt",
-        eth_price_data_file_path="./resources/historicalPrice/Bitfinex_ETHUSD_1h.csv",
-        api_client_rpc_endpoint=environ.get("APP_API_CLIENT_RPC_ENDPOINT")))
-
-    runner.run()
+    print(w3.eth.get_transaction("0x87f2954f829cba53cb1b7b7edfe5a6af3f9dbbf1053ba84260274c915f16c7cb"))

@@ -13,25 +13,25 @@ class Parser(InfuraParser):
     """
 
     def can_handle(self, trx: TrxDto) -> bool:
-        return trx.details.method_id == "0xded9382a" and self.assert_log_length(trx, 9)
+        return trx.details.method_id == "0xded9382a"
 
     def parse(self, trx: TrxDto) -> List[ParsedTrx]:
-        in_trx_log_1 = trx.receipt.get_log_by_index(7)
-        in_trx_log_2 = trx.receipt.get_log_by_index(4)
+        token_in_trx_log = self.find_first_transfer_in_log(trx)
+        major_currency_in_trx_log = self.find_first_withdrawal_from_major_currency(trx)
 
-        if not in_trx_log_1:
+        if not token_in_trx_log:
             raise ValueError("cannot find transaction log of in event #1")
-        if not in_trx_log_2:
+        if not major_currency_in_trx_log:
             raise ValueError("cannot find transaction log of in event #2")
 
-        in_payload_1 = TrxPayload(value=str(int(in_trx_log_1.data, 0)),
+        in_payload_1 = TrxPayload(value=str(int(token_in_trx_log.data, 0)),
                                   value_major=None,
-                                  currency=Infura_currency_lookup.contract_address_to_currency(in_trx_log_1.address))
-        in_payload_2 = TrxPayload(value=str(int(in_trx_log_2.data, 0)),
-                                  value_major=None,
+                                  currency=Infura_currency_lookup.contract_address_to_currency(token_in_trx_log.address))
+        in_payload_2 = TrxPayload(value=str(int(major_currency_in_trx_log.data, 0)),
+                                  value_major=str(int(major_currency_in_trx_log.data, 0)),
                                   currency=self.major_currency)
-        fee_payload = TrxPayload(value=trx.receipt.trx_fee,
-                                 value_major=trx.receipt.trx_fee,
+        fee_payload = TrxPayload(value=trx.trx_fee,
+                                 value_major=trx.trx_fee,
                                  currency=self.major_currency)
 
         parsed_trx_1 = ParsedTrx(trx_id=trx.trx_id,

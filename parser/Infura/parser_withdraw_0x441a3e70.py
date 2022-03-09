@@ -24,8 +24,8 @@ class Parser(InfuraParser):
         in_payload = TrxPayload(value=str(int(in_trx_log.data, 0)),
                                 currency=Infura_currency_lookup.contract_address_to_currency(in_trx_log.address))
         out_payload = None
-        fee_payload = TrxPayload(value=trx.receipt.trx_fee,
-                                 value_major=trx.receipt.trx_fee,
+        fee_payload = TrxPayload(value=trx.trx_fee,
+                                 value_major=trx.trx_fee,
                                  currency=self.major_currency)
 
         return [ParsedTrx(trx_id=trx.trx_id,

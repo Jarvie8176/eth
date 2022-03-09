@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Union, TypeVar, Generic, List
+from typing import Union, TypeVar, Generic, List, Any
 from pydantic.generics import GenericModel
 
 from dto.Infura.transaction import TrxDto as InfuraTrxDto
@@ -11,13 +11,11 @@ AnyTrxDto = Union[InfuraTrxDto, TronTrxDto]
 TrxDtoType = TypeVar("TrxDtoType")
 
 
-class BaseParser(ABC, GenericModel, Generic[TrxDtoType]):
-    def can_handle(self, trx: TrxDtoType) -> bool:
-        return False
+class BaseParser(ABC, Generic[TrxDtoType]):
+    def __init__(self) -> None:
+        super().__init__()
+        self.major_currency_symbol: str = ""
 
-    @abstractmethod
-    def parse(self, trx: TrxDtoType) -> List[ParsedTrx]:
-        raise NotImplementedError("not implemented")
 
     @property
     def load_order(self) -> int:
@@ -27,6 +25,17 @@ class BaseParser(ABC, GenericModel, Generic[TrxDtoType]):
         :return:
         """
         return 0
+
+    def set_major_currency(self, symbol: str) -> None:
+        self.major_currency_symbol = symbol
+
+    @abstractmethod
+    def can_handle(self, trx: TrxDtoType) -> bool:
+        raise NotImplementedError("not implemented")
+
+    @abstractmethod
+    def parse(self, trx: TrxDtoType) -> List[ParsedTrx]:
+        raise NotImplementedError("not implemented")
 
     @abstractmethod
     def assert_log_length(self, trx: TrxDtoType, length: int) -> bool:

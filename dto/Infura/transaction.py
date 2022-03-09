@@ -8,6 +8,7 @@ from pydantic.main import BaseModel
 
 class TrxDetailsDto(BaseModel):
     input: str
+    gasPrice: str  # hex number
 
     @property
     def method_id(self) -> str:
@@ -39,8 +40,7 @@ class TrxReceiptDto(BaseModel):
     blockHash: str
     blockNumber: str
     contractAddress: Optional[str]
-    cumulativeGasUsed: str  # hex number
-    effectiveGasPrice: str  # hex number
+    effectiveGasPrice: Optional[str]  # hex number
     from_: str = Field(alias="from")  # original attribute is from
     gasUsed: str  # hex number
     logsBloom: str
@@ -53,13 +53,6 @@ class TrxReceiptDto(BaseModel):
 
     def get_log_by_index(self, idx: int) -> Optional[TrxLogDto]:
         return self.logs[idx] if 0 <= idx < len(self.logs) else None
-
-    @property
-    def trx_fee(self) -> str:
-        """
-        :return: computed transaction fee
-        """
-        return str(int(self.gasUsed, 0) * int(self.effectiveGasPrice, 0))
 
 
 class TrxBlockDto(BaseModel):
@@ -82,3 +75,10 @@ class TrxDto(BaseModel):
     @property
     def timestamp(self) -> datetime:
         return datetime.fromtimestamp(int(self.block.timestamp, 0), tz=pytz.UTC)
+
+    @property
+    def trx_fee(self) -> str:
+        """
+        :return: computed transaction fee
+        """
+        return str(int(self.details.gasPrice, 0) * int(self.receipt.gasUsed, 0))

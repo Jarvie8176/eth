@@ -24,17 +24,17 @@ class Parser(InfuraParser):
             raise ValueError("cannot find transaction log of in event")
         if not out_trx_log:
             raise ValueError("cannot find transaction log of out event")
-        if not value_equiv_log:
-            raise ValueError("cannot find transaction log of value equiv event")
+
+        value_major = None if not value_equiv_log else str(int(value_equiv_log.data, 0))
 
         in_payload = TrxPayload(value=str(int(in_trx_log.data, 0)),
-                                value_major=str(int(value_equiv_log.data, 0)),
+                                value_major=value_major,
                                 currency=Infura_currency_lookup.contract_address_to_currency(in_trx_log.address))
         out_payload = TrxPayload(value=str(int(out_trx_log.data, 0)),
-                                 value_major=str(int(value_equiv_log.data, 0)),
+                                 value_major=value_major,
                                  currency=Infura_currency_lookup.contract_address_to_currency(out_trx_log.address))
-        fee_payload = TrxPayload(value=trx.receipt.trx_fee,
-                                 value_major=trx.receipt.trx_fee,
+        fee_payload = TrxPayload(value=trx.trx_fee,
+                                 value_major=trx.trx_fee,
                                  currency=self.major_currency)
 
         return [ParsedTrx(trx_id=trx.trx_id,

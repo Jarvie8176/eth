@@ -41,6 +41,16 @@ class ParserLookup(Generic[TrxDtoType]):
                 continue
         raise ParserNotFound("parser not found")
 
+    def update_major_currency(self, symbol: str) -> None:
+        """
+        updates the major currency of all parsers
+        :param symbol:
+        :return:
+        """
+        for parser_list in self.parsers.values():
+            for parser in parser_list:
+                parser.set_major_currency(symbol)
+
     @staticmethod
     def from_parser_list(parser_list: Sequence[BaseParser[TrxDtoType]],
                          pre_condition_assert: Callable[[TrxDtoType], None]) -> ParserLookup[TrxDtoType]:
