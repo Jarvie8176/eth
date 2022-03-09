@@ -183,9 +183,12 @@ class ETHRunner:
 
     def save_results(self) -> None:
         logger.trace("save results: begin")
+
         output_file_path = self.output_file_path
         parsed_trxs = self.parsed_trxs
         rows = [trx.to_dto().dict() for trx in parsed_trxs]
+
+        pathlib.Path(path.dirname(self.output_file_path)).mkdir(parents=True, exist_ok=True)
         with open(self.output_file_path, 'w') as f:
             writer = csv.DictWriter(f, fieldnames=rows[0].keys())
             writer.writeheader()
