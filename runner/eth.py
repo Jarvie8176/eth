@@ -20,6 +20,7 @@ from parser.parserLookup import ParserLookup
 
 class ETHRunnerOptions(TypedDict):
     input_file_path: str
+    output_file_path: str
     trx_list_file_path: str
     api_client: ETHExplorerClient
     parser_lookup: ParserLookup[TrxDto]
@@ -28,6 +29,7 @@ class ETHRunnerOptions(TypedDict):
 
 class ETHRunnerCreateOptions(BaseModel):
     input_file_path: str
+    output_file_path: str
     trx_list_file_path: str
     eth_price_data_file_path: str
     api_client_rpc_endpoint: str
@@ -35,9 +37,13 @@ class ETHRunnerCreateOptions(BaseModel):
 
 class ETHRunner:
     def __init__(self,
-                 input_file_path: str, trx_list_file_path: str, api_client: ETHExplorerClient,
-                 parser_lookup: ParserLookup[TrxDto], price_aggregator: PriceAggregator):
+                 input_file_path: str, output_file_path: str,
+                 trx_list_file_path: str,
+                 api_client: ETHExplorerClient,
+                 parser_lookup: ParserLookup[TrxDto],
+                 price_aggregator: PriceAggregator):
         self.input_file_path = input_file_path
+        self.output_file_path = output_file_path
         self.trx_list_file_path = trx_list_file_path
         self.api_client = api_client
         self.parser_lookup = parser_lookup
@@ -64,6 +70,7 @@ class ETHRunner:
                          parser_lookup=parser_lookup,
                          price_aggregator=price_aggregator,
                          input_file_path=options.input_file_path,
+                         output_file_path=options.output_file_path,
                          trx_list_file_path=options.trx_list_file_path)
 
     def run(self) -> None:
@@ -73,6 +80,8 @@ class ETHRunner:
         transactions = self.load_trx(trx_ids)
 
         parsed_trxs, failed_trxs = self.parse_trx(transactions)
+        self.aggregate_trx(self.parsed_trxs)
+
         self.parsed_trxs = parsed_trxs
         self.failed_trxs = failed_trxs
 
@@ -174,3 +183,11 @@ class ETHRunner:
 
     def save_results(self) -> None:
         logger.trace("save results: begin")
+        output_file_path = self.output_file_path
+        parsed_trxs = self.parsed_trxs
+        rows = [trx.to_dto().dict() for trx in parsed_trxs]
+        with open(self.output_file_path, 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+            writer.writeheader()
+            writer.writerows(rows)
+        logger.info(f"parsed transactions wrote to: {output_file_path}")

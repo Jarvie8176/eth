@@ -14,8 +14,10 @@ if __name__ == "__main__":
 
     runner = ETHRunner.create(ETHRunnerCreateOptions(
         input_file_path="./data/bsc_0x228f5ffe4bffe42278d50563b728af83c36bd1a0.csv",
+        output_file_path="./data/out/bsc_parsed_out_0x228f5ffe4bffe42278d50563b728af83c36bd1a0.csv",
         trx_list_file_path="./data/cache/bsc_trx_list.txt",
         eth_price_data_file_path="./resources/historicalPrice/Bitfinex_ETHUSD_1h.csv",
         api_client_rpc_endpoint=environ.get("APP_API_CLIENT_BIFINANCE_RPC_ENDPOINT")))
 
     runner.run()
+    runner.save_results()
