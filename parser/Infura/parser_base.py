@@ -60,7 +60,7 @@ class InfuraParser(BaseParser[TrxDto], ABC):
                 return log
         return None
 
-    def find_first_transafer_from_major_currency(self, trx: TrxDto) -> Optional[TrxLogDto]:
+    def find_first_transfer_from_major_currency(self, trx: TrxDto) -> Optional[TrxLogDto]:
         """
         returns the first transfer event that is made from the major currency address
         :param trx:
@@ -93,3 +93,21 @@ class InfuraParser(BaseParser[TrxDto], ABC):
             if is_from_major_currency_addr:
                 return log
         return None
+
+    def count_transfer_in(self, trx: TrxDto) -> int:
+        """
+        returns number of transfer in events to the [from address]
+        :param trx:
+        :return:
+        """
+        topic = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+        receiver_addr = trx.receipt.from_
+        result = 0
+        for log in trx.receipt.logs:
+            is_transfer = int(log.topics[0], 0) == int(topic, 0)
+            if not is_transfer:
+                continue
+            is_sent_to_receiver = int(log.topics[1], 0) == int(receiver_addr, 0)
+            if is_sent_to_receiver:
+                result += 1
+        return result

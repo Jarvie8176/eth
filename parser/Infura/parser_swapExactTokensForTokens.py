@@ -54,4 +54,4 @@ class Parser(InfuraParser):
         return self.find_first_transfer_out_log(trx)
 
     def find_value_equiv_trx_log(self, trx: TrxDto) -> Optional[TrxLogDto]:
-        return self.find_first_transafer_from_major_currency(trx)
+        return self.find_first_transfer_from_major_currency(trx)

@@ -5,7 +5,7 @@ from dto.parsedTrx import ParsedTrxStatus
 from parser.Infura import parser_swapETHForExactTokens, parser_swapExactTokensForETH, parser_swapTokensForExactTokens, \
     parser_addLiquidityETH, parser_removeLiquidityETHWithPermit, parser_withdraw, \
     parser_claim, parser_claim_0x4e71d92d, parser_withdraw_0x441a3e70, parser_swapExactTokensForTokens, \
-    parser_swapTokensForExactETH
+    parser_swapTokensForExactETH, parser_hardcoded, parser_getReward, parser_deposit
 from parser.Infura.defn_status import parse_status
 from parser.Infura.parser_base import InfuraParser
 from parser.parserLookup import ParserLookup
@@ -23,6 +23,9 @@ parser_list: List[InfuraParser] = [
     parser_withdraw_0x441a3e70.Parser(),
     parser_claim.Parser(),
     parser_claim_0x4e71d92d.Parser(),
+    parser_hardcoded.Parser(),
+    parser_getReward.Parser(),
+    parser_deposit.Parser(),
 ]
 
 

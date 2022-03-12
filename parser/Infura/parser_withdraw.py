@@ -15,4 +15,4 @@ class Parser(InfuraParser):
         return trx.details.method_id == "0x2e1a7d4d"
 
     def parse(self, trx: TrxDto) -> List[ParsedTrx]:
-        raise TransactionSkipped(f"skipped transaction: {trx.trx_id}")
+        raise TransactionSkipped(f"skipped transaction: withdraw")

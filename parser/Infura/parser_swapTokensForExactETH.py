@@ -45,7 +45,7 @@ class Parser(InfuraParser):
                           fee_payload=fee_payload)]
 
     def find_in_trx_log(self, trx: TrxDto) -> Optional[TrxLogDto]:
-        return self.find_first_transafer_from_major_currency(trx)
+        return self.find_first_transfer_from_major_currency(trx)
 
     def find_out_trx_log(self, trx: TrxDto) -> Optional[TrxLogDto]:
         return self.find_first_transfer_out_log(trx)

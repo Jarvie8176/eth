@@ -18,7 +18,7 @@ def test() -> None:
     runner.save_results()
     result = runner.to_dict()
 
-    assert len(result.get("parsed_trxs")) == 43  # type: ignore
-    assert len(result.get("failed_trxs")) == 135  # type: ignore
+    assert len(result.get("parsed_trxs")) == 52  # type: ignore
+    assert len(result.get("failed_trxs")) == 126  # type: ignore
 
     # todo: check output file hash
