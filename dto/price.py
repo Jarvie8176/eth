@@ -10,3 +10,11 @@ class PriceDto(BaseModel):
 
     def __lt__(self, other: PriceDto) -> bool:
         return self.timestamp < other.timestamp
+
+    def to_usd(self, amount: str) -> str:
+        """
+        converts the amount to USD. todo: it assumes symbols are other_currency / USD
+        :param amount:
+        :return:
+        """
+        return str(float(amount) * float(self.close))

@@ -21,7 +21,7 @@ class EventMetaDto(BaseModel):
     page_size: int
 
 
-class EventDto(BaseModel):
+class TrxEventDto(BaseModel):
     tx_id: str
     success: bool
     data: List[EventDataDto]

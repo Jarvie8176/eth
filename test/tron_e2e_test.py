@@ -1,47 +1,28 @@
-import json
 import pathlib
-from os import path
-from typing import List
+from os import path, environ
+from runner.create_price_aggregator import create_price_aggregator
+from runner.tron import TronGridRunner, TronGridRunnerCreateOptions
 
 from loguru import logger
 
-from aggregator.price import PriceAggregator, PriceAggregatorCreateOptions
-from dto.TronGrid.transaction import TrxDto
-from dto.parsedTrx import ParsedTrx
-from models.exceptions import ParserNotFound
-from parser.TronGrid.defn_parser import TronGrid_parser_lookup
+environ.setdefault("LOGURU_LEVEL", "DEBUG")
 
 
 def test() -> None:
-    test_file = path.join(
-        pathlib.Path(__file__).parent.resolve(),
-        "../data/test_fixture/tron_TJ7ozAvfPwxpNANWfMnAhVwGBYkwTjuscJ.txt")
+    cwd = pathlib.Path(__file__).parent.resolve()
 
-    with open(test_file, "r") as f_trx:
-        transactions = list(map(lambda line: TrxDto(**json.loads(line)), f_trx.readlines()))
+    price_aggregator = create_price_aggregator()
 
-    assert len(transactions) == 172
+    runner = TronGridRunner.create(TronGridRunnerCreateOptions(
+        input_file_path=path.join(cwd, "../data/test_fixture/tron_TJ7ozAvfPwxpNANWfMnAhVwGBYkwTjuscJ.csv"),
+        output_file_path=path.join(cwd, "../data/out/e2e_test_tron_out.csv"),
+        trx_list_file_path=path.join(cwd, "../data/cache/e2e_test_tron_trx_list.txt"),
+        price_aggregator=price_aggregator,
+        api_client_rpc_endpoint=environ.get("APP_API_CLIENT_TRONGRID_RPC_ENDPOINT")))
 
-    parser_lookup = TronGrid_parser_lookup
+    runner.run()
+    runner.save_results()
+    result = runner.to_dict()
 
-    parsed_trx: List[ParsedTrx] = []
-    failed_trx: List[TrxDto] = []
-
-    for trx in transactions:
-        try:
-            parsed_trx = parsed_trx + parser_lookup.find_parser(trx).parse(trx)
-        except ParserNotFound:
-            failed_trx.append(trx)
-        except Exception as e:
-            logger.error("unexpected error", e)
-            failed_trx.append(trx)
-
-    trx_price_data_file_path = path.join(pathlib.Path(__file__).parent.resolve(),
-                                         "../resources/historicalPrice/Bitfinex_TRXUSD_1h.csv")
-    price_aggregator = PriceAggregator.create(
-        options=PriceAggregatorCreateOptions(trx_price_data_file_path=trx_price_data_file_path))
-    for i in parsed_trx:
-        price_aggregator.update_price(i)
-
-    assert len(parsed_trx) == 76
-    assert len(failed_trx) == 96
+    assert len(result.get("parsed_trxs")) == 76  # type: ignore
+    assert len(result.get("failed_trxs")) == 96  # type: ignore

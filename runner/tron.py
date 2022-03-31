@@ -1,47 +1,58 @@
 from __future__ import annotations
 
-from typing import TypedDict
+import csv
+import json
+import pathlib
+from os import path
+from typing import List, Tuple, TypedDict, Dict, Any
 
-from pydantic.main import BaseModel
+import numpy
+from loguru import logger
 
 from aggregator.price import PriceAggregator
+from dto.TronGrid.transaction import TrxDto
+from dto.failedTrx import FailedTrx
+from dto.parsedTrx import ParsedTrx
+from explorerClient.tron import TronGridExplorerClient
+from models.exceptions import ParserNotFound, CurrencyNotFound, TransactionSkipped, InvalidTransaction
+from parser.TronGrid.defn_parser import TronGrid_parser_lookup
 from parser.parserLookup import ParserLookup
 
 
-class TronRunnerOptions(TypedDict):
+class TronGridRunnerOptions(TypedDict):
     input_file_path: str
     output_file_path: str
     trx_list_file_path: str
-    api_client: TRONExplorerClient
+    api_client: TronGridExplorerClient
     parser_lookup: ParserLookup[TrxDto]
     price_aggregator: PriceAggregator
 
 
-class ETHRunnerCreateOptions(BaseModel):
+class TronGridRunnerCreateOptions(TypedDict):
     input_file_path: str
     output_file_path: str
     trx_list_file_path: str
-    eth_price_data_file_path: str
     api_client_rpc_endpoint: str
+    price_aggregator: PriceAggregator
 
 
-class ETHRunner:
+class TronGridRunner:
     def __init__(self,
                  input_file_path: str, output_file_path: str,
                  trx_list_file_path: str,
-                 api_client: ETHExplorerClient,
+                 api_client: TronGridExplorerClient,
                  parser_lookup: ParserLookup[TrxDto],
                  price_aggregator: PriceAggregator):
         self.input_file_path = input_file_path
         self.output_file_path = output_file_path
-        self.trx_list_file_path = trx_list_file_path
+        self.trx_list_file_path = trx_list_file_path  # cache file
         self.api_client = api_client
         self.parser_lookup = parser_lookup
         self.price_aggregator = price_aggregator
 
         # results
         self.parsed_trxs: List[ParsedTrx] = []
-        self.failed_trxs: List[TrxDto] = []
+        self.failed_trxs: List[FailedTrx] = []
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -50,18 +61,17 @@ class ETHRunner:
         }
 
     @staticmethod
-    def create(options: ETHRunnerCreateOptions) -> ETHRunner:
-        api_client = ETHExplorerClient.create(rpc_endpoint=options.api_client_rpc_endpoint)
-        parser_lookup = Infura_parser_lookup
-        price_aggregator = PriceAggregator.create(
-            options=PriceAggregatorCreateOptions(eth_price_data_file_path=options.eth_price_data_file_path))
+    def create(options: TronGridRunnerCreateOptions) -> TronGridRunner:
+        api_client = TronGridExplorerClient.create(rpc_endpoint=options["api_client_rpc_endpoint"])
+        parser_lookup = TronGrid_parser_lookup
+        price_aggregator = options["price_aggregator"]
 
-        return ETHRunner(api_client=api_client,
-                         parser_lookup=parser_lookup,
-                         price_aggregator=price_aggregator,
-                         input_file_path=options.input_file_path,
-                         output_file_path=options.output_file_path,
-                         trx_list_file_path=options.trx_list_file_path)
+        return TronGridRunner(api_client=api_client,
+                              parser_lookup=parser_lookup,
+                              price_aggregator=price_aggregator,
+                              input_file_path=options["input_file_path"],
+                              output_file_path=options["output_file_path"],
+                              trx_list_file_path=options["trx_list_file_path"])
 
     def run(self) -> None:
         trx_ids = self.load_input_file()
@@ -106,7 +116,7 @@ class ETHRunner:
         """
         with open(self.input_file_path, "r") as f:
             input = csv.DictReader(f)
-            result = list(map(lambda row: row.get("Txhash"), input))
+            result = list(map(lambda row: row.get("hash"), input))
             return result  # type: ignore
 
     def load_trx_from_cache(self) -> Dict[str, TrxDto]:
@@ -135,7 +145,7 @@ class ETHRunner:
         with open(self.trx_list_file_path, mode) as f:
             f.writelines([json.dumps(i.dict()) + "\n" for i in trx_list])
 
-    def parse_trx(self, trx_list: List[TrxDto]) -> Tuple[List[ParsedTrx], List[TrxDto]]:
+    def parse_trx(self, trx_list: List[TrxDto]) -> Tuple[List[ParsedTrx], List[FailedTrx]]:
         """
 
         :param trx_list:
@@ -146,23 +156,26 @@ class ETHRunner:
 
         parser_lookup = self.parser_lookup
         parsed_trxs: List[ParsedTrx] = []
-        failed_trxs: List[TrxDto] = []
+        failed_trxs: List[FailedTrx] = []
 
         for trx in trx_list:
             try:
                 parsed_trxs = parsed_trxs + parser_lookup.find_parser(trx).parse(trx)
-            except ParserNotFound:
+            except InvalidTransaction as e:
+                logger.info(f"{trx.trx_id}: invalid transaction")
+                failed_trxs.append(FailedTrx(trx_id=trx.trx_id, url=trx.url, method_id="0", err=e))
+            except ParserNotFound as e:
                 logger.info(f"{trx.trx_id}: parser not found")
-                failed_trxs.append(trx)
+                failed_trxs.append(FailedTrx(trx_id=trx.trx_id, url=trx.url, method_id=trx.details.method_id, err=e))
             except CurrencyNotFound as e:
                 logger.warning(f"{trx.trx_id}: {str(e)}")
-                failed_trxs.append(trx)
-            except TransactionSkipped:
+                failed_trxs.append(FailedTrx(trx_id=trx.trx_id, url=trx.url, method_id=trx.details.method_id, err=e))
+            except TransactionSkipped as e:
                 logger.info(f"{trx.trx_id}: transaction skipped")
-                failed_trxs.append(trx)
+                failed_trxs.append(FailedTrx(trx_id=trx.trx_id, url=trx.url, method_id=trx.details.method_id, err=e))
             except Exception as e:
                 logger.error(f"{trx.trx_id}: unexpected error: {str(e)}")
-                failed_trxs.append(trx)
+                failed_trxs.append(FailedTrx(trx_id=trx.trx_id, url=trx.url, method_id=trx.details.method_id, err=e))
 
         return parsed_trxs, failed_trxs
 
@@ -173,15 +186,40 @@ class ETHRunner:
             price_aggregator.update_price(i)
 
     def save_results(self) -> None:
-        logger.trace("save results: begin")
+        file_dir = path.dirname(self.output_file_path)
+        pathlib.Path(file_dir).mkdir(parents=True, exist_ok=True)
 
+        logger.trace("save results: begin")
+        self.save_parsed_trx()
+        self.save_failed_trx()
+
+    def save_parsed_trx(self) -> None:
         output_file_path = self.output_file_path
         parsed_trxs = self.parsed_trxs
-        rows = [trx.to_dto().dict() for trx in parsed_trxs]
 
-        pathlib.Path(path.dirname(self.output_file_path)).mkdir(parents=True, exist_ok=True)
-        with open(self.output_file_path, 'w') as f:
+        csv_dtos = [trx.to_csv_dto() for trx in parsed_trxs]
+        rows = [i.dict(by_alias=True) for i in numpy.concatenate(csv_dtos).flat]
+        #
+        # rows = [trx.to_dto().dict() for trx in parsed_trxs]
+
+        with open(output_file_path, 'w') as f:
             writer = csv.DictWriter(f, fieldnames=rows[0].keys())
             writer.writeheader()
             writer.writerows(rows)
         logger.info(f"parsed transactions wrote to: {output_file_path}")
+
+    def save_failed_trx(self) -> None:
+        output_file_path = self.output_file_path
+        file_dir = path.dirname(self.output_file_path)
+        output_file_name = pathlib.Path(output_file_path).stem
+        failed_trx_file_path = path.join(file_dir, f"{output_file_name}_failed.csv")
+
+        failed_trxs = self.failed_trxs
+        rows = [trx.to_dto().dict() for trx in failed_trxs]
+
+        with open(failed_trx_file_path, 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+            writer.writeheader()
+            writer.writerows(rows)
+
+        logger.info(f"failed transactions wrote to: {failed_trx_file_path}")

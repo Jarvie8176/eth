@@ -31,11 +31,10 @@ class TrxReceiptDto(BaseModel):
     class Config:
         allow_population_by_field_name = True
 
-    # noinspection PyMethodParameters
-    def __init__(__pydantic_self__, **data: Any) -> None:
+    def __init__(self, **data: Any) -> None:
         super().__init__(**data)
 
-        __pydantic_self__.logs.sort(key=lambda log: int(log.logIndex, 0))
+        self.logs.sort(key=lambda log: int(log.logIndex, 0))
 
     blockHash: str
     blockNumber: str

@@ -37,6 +37,13 @@ currency_list: List[Currency] = [
              contract_address="0xa1d0e215a23d7030842fc67ce582a6afa3ccab83"),
     Currency(name="UNIFI", unit="UNIFI", decimal_places=18,
              contract_address="0x0ef3b2024ae079e6dbc2b37435ce30d2731f0101"),
+    Currency(name="Republic", unit="REN", decimal_places=18,
+             contract_address="0x408e41876cccdc0f92210600ef50372656052a38"),
+    Currency(name="YFValue", unit="YFV", decimal_places=18,
+             contract_address="0x45f24baeef268bb6d63aee5129015d69702bcdfa"),
+    Currency(name="Aave Interest bearing YFI", unit="aYFI", decimal_places=18,
+             contract_address="0x12e51e77daaa58aa0e9247db7510ea4b46f9bead"),
+
 
     # BSC network
     Currency(name="BNB", unit="BNB", decimal_places=18,
@@ -51,7 +58,7 @@ currency_list: List[Currency] = [
              contract_address="0xa184088a740c695e156f91f5cc086a06bb78b827"),
     Currency(name="Pancake LPs", unit="Cake-LP", decimal_places=18,
              contract_address="0xd5664d2d15cdffd597515f1c0d945c6c1d3bf85b"),
-    Currency(name="Ellipsis.finance BUSD/USDC/USDT ", unit="3EPS", decimal_places=18,
+    Currency(name="Ellipsis.finance BUSD/USDC/USDT", unit="3EPS", decimal_places=18,
              contract_address="0xaf4de8e872131ae328ce21d909c74705d3aaf452"),
     Currency(name="Binance-Peg BUSD Token", unit="BUSD", decimal_places=18,
              contract_address="0xe9e7cea3dedca5984780bafc599bd69add087d56"),
@@ -63,7 +70,7 @@ currency_list: List[Currency] = [
              contract_address="0x42f6f551ae042cbe50c739158b4f0cac0edb9096"),
     Currency(name="Wrapped UST Token ", unit="UST", decimal_places=18,
              contract_address="0x23396cf899ca06c4472205fc903bdb4de249d6fc"),
-    Currency(name="Wrapped Mirror GOOGL Token ", unit="mGOOGL", decimal_places=18,
+    Currency(name="Wrapped Mirror GOOGL Token", unit="mGOOGL", decimal_places=18,
              contract_address="0x62d71b23bf15218c7d2d7e48dbbd9e9c650b173f"),
     Currency(name="Wrapped UST Token ", unit="UST", decimal_places=18,
              contract_address="0x23396cf899ca06c4472205fc903bdb4de249d6fc"),
@@ -89,8 +96,20 @@ currency_list: List[Currency] = [
              contract_address="0x843d4a358471547f51534e3e51fae91cb4dc3f28"),
     Currency(name="Wrapped Mirror TSLA Token", unit="mTSLA", decimal_places=18,
              contract_address="0xf215a127a196e3988c09d052e16bcfd365cd7aa3"),
-
+    Currency(name="Wrapped UST Token", unit="UST", decimal_places=18,
+             contract_address="0x23396cf899ca06c4472205fc903bdb4de249d6fc"),
+    Currency(name="Pancake LPs", unit="Cake-LP", decimal_places=18,
+             contract_address="0x852a68181f789ae6d1da3df101740a59a071004f"),
+    Currency(name="Nerve 3pool LP", unit="3NRV-LP", decimal_places=18,
+             contract_address="0xf2511b5e4fb0e5e2d123004b672ba14850478c14"),
+    Currency(name="Pancake LPs", unit="Cake-LP", decimal_places=18,
+             contract_address="0xf609ade3846981825776068a8ed7746470029d1f"),
+    Currency(name="Binance-Peg Ethereum Token", unit="ETH", decimal_places=18,
+             contract_address="0x2170ed0880ac9a755fd29b2688956bd959f933f8"),
+    Currency(name="Nerve anyETH/ETH LP", unit="nrvETH", decimal_places=18,
+             contract_address="0x0d283bf16a9bde49cfc48d8dc050af28b71bdd90"),
+    Currency(name="ACryptoS PancakeSwap Token", unit="acsCake", decimal_places=18,
+             contract_address="0xb6eb654fbdc697edd73174a19b074bc67c00a0c0"),
 ]
-
 
 Infura_currency_lookup = CurrencyLookup.from_currency_list(currency_list)

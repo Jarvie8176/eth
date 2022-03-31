@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Optional, Any
+from typing import Optional, Any, List
 
 from dto.Infura.transaction import TrxDto, TrxLogDto
 from models.exceptions import TrxLogLengthNotMatch
@@ -43,6 +43,47 @@ class InfuraParser(BaseParser[TrxDto], ABC):
         return None
 
     @staticmethod
+    def find_second_transfer_in_log(trx: TrxDto) -> Optional[TrxLogDto]:
+        """
+        returns the second transfer event that transfers into [from address]
+        :param trx:
+        :return:
+        """
+        topic = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+        receiver_addr = trx.receipt.from_
+        first_found = False
+        for log in trx.receipt.logs:
+            is_transfer = int(log.topics[0], 0) == int(topic, 0)
+            if not is_transfer:
+                continue
+            is_sent_to_receiver = int(log.topics[2], 0) == int(receiver_addr, 0)
+            if is_sent_to_receiver:
+                if first_found:
+                    return log
+                else:
+                    first_found = True
+                    continue
+        return None
+
+    def find_all_transfer_in_logs(self, trx: TrxDto) -> List[TrxLogDto]:
+        """
+        returns all transfer events that transfers into [from address]
+        :param trx:
+        :return:
+        """
+        topic = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+        receiver_addr = trx.receipt.from_
+        result = []
+        for log in trx.receipt.logs:
+            is_transfer = int(log.topics[0], 0) == int(topic, 0)
+            if not is_transfer:
+                continue
+            is_sent_to_receiver = int(log.topics[2], 0) == int(receiver_addr, 0)
+            if is_sent_to_receiver:
+                result.append(log)
+        return result
+
+    @staticmethod
     def find_first_transfer_out_log(trx: TrxDto) -> Optional[TrxLogDto]:
         """
         returns the first transfer event that transfers out of [from address]
@@ -55,10 +96,28 @@ class InfuraParser(BaseParser[TrxDto], ABC):
             is_transfer = int(log.topics[0], 0) == int(topic, 0)
             if not is_transfer:
                 continue
-            is_sent_to_receiver = int(log.topics[1], 0) == int(receiver_addr, 0)
-            if is_sent_to_receiver:
+            is_sent_from_receiver = int(log.topics[1], 0) == int(receiver_addr, 0)
+            if is_sent_from_receiver:
                 return log
         return None
+
+    def find_all_transfer_out_logs(self, trx: TrxDto) -> List[TrxLogDto]:
+        """
+        returns all transfer events that transfers out of [from address]
+        :param trx:
+        :return:
+        """
+        topic = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+        receiver_addr = trx.receipt.from_
+        result = []
+        for log in trx.receipt.logs:
+            is_transfer = int(log.topics[0], 0) == int(topic, 0)
+            if not is_transfer:
+                continue
+            is_sent_from_receiver = int(log.topics[1], 0) == int(receiver_addr, 0)
+            if is_sent_from_receiver:
+                result.append(log)
+        return result
 
     def find_first_transfer_from_major_currency(self, trx: TrxDto) -> Optional[TrxLogDto]:
         """

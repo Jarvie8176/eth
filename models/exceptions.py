@@ -1,3 +1,6 @@
+class InvalidTransaction(Exception):
+    pass
+
 class ParserNotFound(Exception):
     pass
 

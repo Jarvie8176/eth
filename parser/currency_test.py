@@ -23,3 +23,8 @@ def test_to_readable_value() -> None:
 
     currency = Currency(decimal_places=6, name="", unit="", contract_address="")
     assert currency.to_readable_value("2363782943") == "2363.782943"
+
+
+def test() -> None:
+    currency = Currency(decimal_places=18, name="", unit="", contract_address="")
+    assert currency.to_readable_value("22812479999873264") == "0.022812479999873264"

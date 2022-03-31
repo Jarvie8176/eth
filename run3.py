@@ -20,16 +20,16 @@ def load_csv(file_path) -> Tuple[IO, Iterable[Dict]]:
     return file, input
 
 
-def get_transaction_details(trx_id: str) -> TrxDetailsDto:
-    logger.debug("fetch trx details: {trx_id}", trx_id=trx_id)
-    url = "https://api.trongrid.io/wallet/gettransactionbyid"
-    payload = {"value": trx_id}
-    headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json"
-    }
-    response = requests.request("POST", url, json=payload, headers=headers)
-    return TrxDetailsDto(**response.json())
+# def get_transaction_details(trx_id: str) -> TrxDetailsDto:
+#     logger.debug("fetch trx details: {trx_id}", trx_id=trx_id)
+#     url = "https://api.trongrid.io/wallet/gettransactionbyid"
+#     payload = {"value": trx_id}
+#     headers = {
+#         "Accept": "application/json",
+#         "Content-Type": "application/json"
+#     }
+#     response = requests.request("POST", url, json=payload, headers=headers)
+#     return TrxDetailsDto(**response.json())
 
 
 def get_transaction_events(trx_id: str):  # todo: define dto
