@@ -7,6 +7,8 @@ from typing_extensions import Annotated
 from pydantic.fields import Field
 from pydantic.main import BaseModel
 
+from tronapi import Tron
+
 import pytz
 
 from dto.TronGrid.event import TrxEventDto
@@ -38,6 +40,8 @@ TrxRawDataContractDto = Annotated[Union[TransferAssetContractDto,
                                         TransferContractDto,
                                         TriggerSmartContractDto],
                                   Field(discriminator="type")]
+
+tron = Tron()
 
 
 class TrxRawDataDto(BaseModel):
@@ -113,3 +117,16 @@ class TrxDto(BaseModel):
 
     def get_contract(self) -> Optional[TrxRawDataContractDto]:
         return self.details.get_contract()
+
+    def get_account_base58(self) -> str:
+        """
+        :return: account in base58 format
+        """
+        return tron.address.from_hex("41" + self.get_account_hex()[2:]).decode()
+
+    def get_account_hex(self) -> str:
+        """
+        https://developers.tron.network/docs/account#account-address-format
+        :return: account in hex format without the prefix "41"
+        """
+        return "0x" + self.details.raw_data.contract[0].parameter.value.owner_address[2:]

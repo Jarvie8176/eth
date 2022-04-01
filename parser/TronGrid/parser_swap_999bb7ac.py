@@ -18,6 +18,8 @@ class Parser(TronGridParser):
     """
 
     def can_handle(self, trx: TrxDto) -> bool:
+        if trx.details.method_id != "999bb7ac":
+            return False
         try:
             contract = trx.get_contract()
             if not contract:

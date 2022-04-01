@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Any
 
 from pydantic.main import BaseModel
 
@@ -27,8 +27,10 @@ class TrxEventDto(BaseModel):
     data: List[EventDataDto]
     meta: EventMetaDto
 
+    def __init__(self, **data: Any) -> None:
+        super().__init__(**data)
+
+        self.data.sort(key=lambda log: log.event_index)
+
     def get_event_by_index(self, idx: int) -> EventDataDto:
-        try:
-            return next(i for i in self.data if i.event_index == idx)
-        except StopIteration:
-            raise Exception("index out of range")
+        return self.data[idx] if 0 <= idx < len(self.data) else None

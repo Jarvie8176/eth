@@ -22,6 +22,30 @@ skipped_methods: List[SkippedMethod] = [
     SkippedMethod(method_id="d2d0e066", name="deposit"),
     SkippedMethod(method_id="d0e30db0", name="deposit"),
     SkippedMethod(method_id="c858f5f9", name="borrow"),
+    SkippedMethod(method_id="049878f3", name="join"),
+    SkippedMethod(method_id="a9059cbb", name="transfer"),
+    SkippedMethod(method_id="abbc44ed", name="bulksendTokenSimple"),
+    SkippedMethod(method_id="b688a363", name="join"),
+    SkippedMethod(method_id="daea85c5", name="approve"),
+
+    SkippedMethod(method_id="e655a9d1", name="buyUnitRaffleTicket"),
+    SkippedMethod(method_id="28a3623e", name="claimFirstUnit"),
+    SkippedMethod(method_id="5dc22cce", name="attackPlayer"),
+    SkippedMethod(method_id="709375d0", name="spendTalentPoint"),
+    SkippedMethod(method_id="a21f74b8", name="fundGooResearch"),
+    SkippedMethod(method_id="a5a2cb19", name="buyUpgrade"),
+    SkippedMethod(method_id="4b8772c1", name="buyUnit"),
+    SkippedMethod(method_id="f340fa01", name="deposit"),
+
+    SkippedMethod(method_id="db006a75", name="redeem"),
+    SkippedMethod(method_id="4a9321ef", name="depositTRX"),
+
+    # SkippedMethod(method_id="foo", name="bar"),
+    # SkippedMethod(method_id="foo", name="bar"),
+
+    # SkippedMethod(method_id="foo", name="bar"),
+
+
 
     # SkippedMethod(method_id="foo", name="bar"),
 ]

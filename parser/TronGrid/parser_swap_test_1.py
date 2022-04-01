@@ -5,24 +5,24 @@ from parser.TronGrid.util import prepare_parse_result
 
 def test_usage() -> None:
     expected = [{
-        "trx_id": "90713085085541744d004caeac9810e8e51e5f45941f1ffc988ad03a4e6b2d7a",
-        "url": "https://tronscan.org/#/transaction/90713085085541744d004caeac9810e8e51e5f45941f1ffc988ad03a4e6b2d7a",
+        "trx_id": "d6a9f0cb2bd9265a0af98737fef6b06d649c466c8a6c6de31211fa7b45290d04",
+        "url": "https://tronscan.org/#/transaction/d6a9f0cb2bd9265a0af98737fef6b06d649c466c8a6c6de31211fa7b45290d04",
         "type": "Swap",
         "status": "SUCCESS",
-        "timestamp": "2020-09-29T21:06:45+00:00",
-        "in_amount": "20.587889",
-        "in_amount_major": "799.800211",
-        "in_currency": "USDT",
+        "timestamp": "2020-09-12T10:45:18+00:00",
+        "in_amount": "103500.0",
+        "in_amount_major": "103500.0",
+        "in_currency": "TRON",
         "in_rate": None,
         "in_rate_unit": None,
         "in_rate_timestamp": None,
-        "out_amount": "0.059127",
-        "out_amount_major": "799.800211",
-        "out_currency": "COLA",
+        "out_amount": "3362.339482",
+        "out_amount_major": None,
+        "out_currency": "USDT",
         "out_rate": None,
         "out_rate_unit": None,
         "out_rate_timestamp": None,
-        "fee_amount": "0.80159",
+        "fee_amount": "0.41002",
         "fee_currency": "TRON",
         "fee_rate": None,
         "fee_rate_unit": None,
@@ -30,9 +30,6 @@ def test_usage() -> None:
     }]
 
     result = prepare_parse_result(__file__)
-
-    print(json.dumps(expected[0]))
-    print(json.dumps(result[0].to_dto().dict()))
 
     assert len(result) == 1
     TestCase().assertDictEqual(expected[0], result[0].to_dto().dict())

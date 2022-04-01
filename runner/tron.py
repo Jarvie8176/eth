@@ -102,10 +102,13 @@ class TronGridRunner:
                 result.append(cached_trx)
                 logger.debug(f"({idx + 1}/{len(trx_ids)}) {trx_id}: loaded from cache")
             else:
-                trx = self.api_client.get_transaction(trx_id)
-                result.append(trx)
-                self.save_trx_to_cache([trx], mode="a")
-                logger.debug(f"({idx + 1}/{len(trx_ids)}) {trx_id}: saved to cache")
+                try:
+                    trx = self.api_client.get_transaction(trx_id)
+                    result.append(trx)
+                    self.save_trx_to_cache([trx], mode="a")
+                    logger.debug(f"({idx + 1}/{len(trx_ids)}) {trx_id}: saved to cache")
+                except Exception as e:
+                    logger.warning(f"cannot parse transaction: {str(e)}")
 
         return result
 

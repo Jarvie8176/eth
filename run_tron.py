@@ -13,12 +13,29 @@ if __name__ == "__main__":
 
     price_aggregator = create_price_aggregator()
 
+    # runner = TronGridRunner.create(TronGridRunnerCreateOptions(
+    #     input_file_path=path.join(cwd, "./data/tron_TJVx5aV1Ajb9TBog7XVSakf5xZb3pMbAL8.csv"),
+    #     output_file_path=path.join(cwd, "./data/out/tron_parsed_out_TJVx5aV1Ajb9TBog7XVSakf5xZb3pMbAL8.csv"),
+    #     trx_list_file_path=path.join(cwd, "./data/cache/tron_trx_list.txt"),
+    #     price_aggregator=price_aggregator,
+    #     api_client_rpc_endpoint=environ.get("APP_API_CLIENT_TRONGRID_RPC_ENDPOINT")))
+
+    # runner = TronGridRunner.create(TronGridRunnerCreateOptions(
+    #     input_file_path=path.join(cwd, "./data/tron_TLkjSwb7Bb5XSPaJ8DPSf3Qak6qq5Kkd91.csv"),
+    #     output_file_path=path.join(cwd, "./data/out/tron_parsed_out_TLkjSwb7Bb5XSPaJ8DPSf3Qak6qq5Kkd91.csv"),
+    #     trx_list_file_path=path.join(cwd, "./data/cache/tron_trx_list.txt"),
+    #     price_aggregator=price_aggregator,
+    #     api_client_rpc_endpoint=environ.get("APP_API_CLIENT_TRONGRID_RPC_ENDPOINT")))
+
     runner = TronGridRunner.create(TronGridRunnerCreateOptions(
-        input_file_path=path.join(cwd, "./data/tron_TEBtHHE5Ve2vneTpcKo4UevB2tw1M8D7GN.csv"),
-        output_file_path=path.join(cwd, "./data/out/tron_parsed_out_TEBtHHE5Ve2vneTpcKo4UevB2tw1M8D7GN.csv"),
+        input_file_path=path.join(cwd, "./data/tron_TKN9QU6PuTRaUCaT3hwjppNdAQDcz3tuM5.csv"),
+        output_file_path=path.join(cwd, "./data/out/tron_parsed_out_TKN9QU6PuTRaUCaT3hwjppNdAQDcz3tuM5.csv"),
         trx_list_file_path=path.join(cwd, "./data/cache/tron_trx_list.txt"),
         price_aggregator=price_aggregator,
         api_client_rpc_endpoint=environ.get("APP_API_CLIENT_TRONGRID_RPC_ENDPOINT")))
+
+
+
 
     runner.run()
     runner.save_results()

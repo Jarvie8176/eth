@@ -1,9 +1,10 @@
+import json
 from unittest import TestCase
 from parser.TronGrid.util import prepare_parse_result
 
 
 def test_usage() -> None:
-    expected = {
+    expected = [{
         "trx_id": "f0e3a0992ecef757bf7e17b182dabd8a20add414b63eb9c1211707f52f38befe",
         "url": "https://tronscan.org/#/transaction/f0e3a0992ecef757bf7e17b182dabd8a20add414b63eb9c1211707f52f38befe",
         "type": "Swap",
@@ -26,8 +27,12 @@ def test_usage() -> None:
         "fee_rate": None,
         "fee_rate_unit": None,
         "fee_rate_timestamp": None,
-    }
+    }]
 
     result = prepare_parse_result(__file__)
+
+    print(json.dumps(expected[0]))
+    print(json.dumps(result[0].to_dto().dict()))
+
     assert len(result) == 1
-    TestCase().assertDictEqual(expected, result[0].to_dto().dict())
+    TestCase().assertDictEqual(expected[0], result[0].to_dto().dict())
